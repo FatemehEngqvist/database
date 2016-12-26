@@ -25,6 +25,10 @@ In Java: Execute update and close
 
 Execute twice Insert 1
 
+
+
+
+
 * CRUD
 
 * NULL VALUES
