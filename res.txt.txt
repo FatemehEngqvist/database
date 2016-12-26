@@ -1,0 +1,34 @@
+
+
+* Usage of SQL from Java
+
+
+JDBC
+https://docs.oracle.com/javase/tutorial/jdbc/overview/index.html
+
+
+Exception in thread "main" java.sql.SQLException: No suitable driver found for jdbc:hsqldb:file:~/Sources/res/hello1
+
+Add the JDBS driver
+
+
+Query examples
+
+
+Parametered query
+
+* CRUD
+
+Excercises on Delete, UPDATE, INSERT
+
+In Java: Execute update and close
+
+Execute twice Insert 1
+
+* CRUD
+
+* NULL VALUES
+
+* Group BY
+
+

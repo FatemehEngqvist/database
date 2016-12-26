@@ -1,0 +1,332 @@
+* Creating a database
+	We use SQLite that is a sumer small DBMS
+
+	https://sqlite.org/cli.html
+	For now we use the command line interface, but there are also GUI
+	(e.g. XXX)
+
+	Similarly to the CLI interface, our program can connect the the SQLite
+	engine and operate on the data
+
+	http://web.stanford.edu/class/cs145/
+
+	We use HSQL DB with DBeaver
+
+
+sqlite3 example
+
+create table students(name varchar(10));
+
+We are creating a table students with one attribute (name) being a string up to
+10 chars.
+
+Let see the table schema again
+.schema students
+
+OK, What if I do not remember the table name?
+.tables
+
+We did a mess, the table student is not complete, let do it again from scretch
+C^D
+
+.tables
+
+is still there
+
+Let drop (delete) the table
+
+drop table students;
+
+.tables
+
+create table students(name varchar(10), surname varchar(10), nationality varchar(20), birthday varchar(20));
+
+.table students
+
+* Adding data to a table
+
+Let add some student to the table
+insert into students values('Roberto', 'Guanciale', 'Italian', '08-12-1979');
+insert into students values('AAA', 'BBB', 'Swedish', '08-12-1999');
+insert into students values('hello', 'HeyHey', 'Swedish', '99-12-1989');
+
+<f5>
+
+Wrong date, but it is accepted, becouse we do not informed the DB that the birthday attribute is a date
+insert into students values('Erik', 'Erikson', 'Swedish', ':-P');
+insert into students values('Erik', 'Erikson', 'Swedish', '12345678901234567890');
+
+insert into students values('Erik', 'Erikson', 'Swedish', '123456789012345678901234567890');
+ERROR Why?
+
+
+
+insert into students values('Roberto', 'Guanciale', 'Italian', '08-12-1979');
+
+
+We can add duplicates
+
+.dump
+
+Dump the whole database
+
+Notice Roberto is there twice
+
+insert into students values(Roberto, 'Guanciale', 'Italian', '08-12-1979');
+insert into students values('Roberto', 'Guanciale', 'Italian', 08-12-1979);
+
+
+* Other interfaces
+Sqlite studio
+	Show schema
+	Delete data
+	Commit
+	Add data
+
+dbeaver
+
+
+* Let extract information from the database
+
+select * from students;
+select name from students;
+
+Second difference with a spreadsheet (first difference is the typing)
+is that we do not need to fetch all data from the disk
+
+select name,surname from students;
+
+select surname,birthday from students;
+
+select nationality,birthday from students;
+
+Let filter data
+
+select *
+from students
+where nationality='Swedish';
+
+
+select name,surname,birthday
+from students
+where nationality='Swedish';
+
+* Modify tables
+
+Create a primary key
+
+* Expressions
+SELECT name, weight
+FROM students;
+
+SELECT name, weight + 10
+FROM students;
+
+SELECT name, weight * 10
+FROM students;
+
+SELECT name, weight / 10
+FROM students;
+
+Add column height
+
+SELECT name, height/weight
+FROM students;
+
+SELECT name, height*100/weight
+FROM students;
+
+(boolean Value)http://web.stanford.edu/class/cs145/
+SELECT name, height>40
+FROM students;
+
+SELECT name, (height>170), WEIGHT > 40 
+FROM students;
+
+SELECT name, (height>170) AND (WEIGHT > 40) 
+FROM students;
+
+SELECT name, (height>170) OR (WEIGHT > 40) 
+FROM students;
+
+SELECT name, surname 
+FROM students;
+
+SELECT name + ' ' + surname 
+FROM students;
+
+* Expressions in Where clausole
+
+select *
+from students
+where nationality='Swedish';
+
+select *
+from students
+where WEIGHT >= 42;
+
+select *
+from students
+where WEIGHT >= 42
+ AND HEIGHT > 172;
+
+
+select *
+from students
+where WEIGHT > 42
+ or NATIONALITY = 'Swedish';
+
+
+select *
+from students
+where BIRTHDAY > '1980-01-01';
+
+
+* Using LIKE
+
+SELECT *
+FROM students
+WHERE NAME LIKE 'R%erto';
+
+SELECT *
+FROM students
+WHERE NAME LIKE 'R%er%';
+
+SELECT *
+FROM students
+WHERE NAME LIKE 'R%er_o';
+
+% = any	sequence of characters	
+_ = any	single character
+
+
+* Eliminating duplicates
+SELECT nationality
+FROM students;
+
+SELECT DISTINCT nationality
+FROM students;
+
+SELECT DISTINCT nationality, BIRTHDAY
+FROM students;
+
+
+* Sort1ng the ResultsSELECT name, NATIONALITY
+FROM students
+WHERE HEIGHT >= 175
+ORDER BY NATIONALITY DESC, WEIGHT DESC;
+
+SELECT name, NATIONALITY, WEIGHT, HEIGHT
+FROM students;
+
+SELECT name, NATIONALITY, WEIGHT, HEIGHT
+FROM students
+WHERE HEIGHT >= 175
+ORDER BY NATIONALITY
+
+SELECT name, NATIONALITY, WEIGHT, HEIGHT
+FROM students
+WHERE HEIGHT >= 175
+ORDER BY NATIONALITY, WEIGHT;
+
+SELECT name, NATIONALITY, WEIGHT, HEIGHT
+FROM students
+WHERE HEIGHT >= 175
+ORDER BY NATIONALITY, WEIGHT DESC;
+
+SELECT name, NATIONALITY, WEIGHT, HEIGHT
+FROM students
+WHERE HEIGHT >= 175
+ORDER BY NATIONALITY DESC, WEIGHT DESC;
+
+SELECT name, NATIONALITY
+FROM students
+WHERE HEIGHT >= 175
+ORDER BY NATIONALITY DESC, WEIGHT DESC;
+
+
+
+* Homework
+
+http://www.w3resource.com/sql/tutorials.php
+
+Excercise
+
+http://www.w3resource.com/sql-exercises/
+
+Design a schema (table) to handle salesmen.
+Every salesement has a unique identifier, name, city and commission (a percentage)
+
+Fill the table with the following data
+salesman_id  name        city        commission
+-----------  ----------  ----------  ----------
+5001         James Hoog  New York    0.15
+5002         Nail Knite  Paris       0.13
+5005         Pit Alex    London      0.11
+5006         Mc Lyon     Paris       0.14
+5003         Lauson Hen  Stockholm   0.12
+
+Add the following salesman wuing an INSERT statement
+salesman_id  name        city        commission
+-----------  ----------  ----------  ----------
+5007         Paul Adam   Rome        0.13
+
+WARNING, use single quote instead of double qoute
+
+WARNING, we need to use a from in every select
+
+- Write a SQL statement to display all the information of all salesmen
+
+- Write a query to display the sum of two numbers 10 and 15 from every salesman
+
+- Write a query to display the result of an arithmetic expression for every salesman
+
+- Write a query to display three numbers in three columns for every salesman
+
+- Write a SQL statement to display a string "This is SQL Exercise, Practice and Solution" for every salesman
+
+- Write a SQL statement to display specific columns like name and commission for all the salesmen
+
+- Write a query which will retrieve the name of all salesmen, getting orders from the commission
+
+- Write a query which will retrieve the name of all salesmen, getting orders from the commission (inverse order)
+
+- Write a SQL statement to display names and city of salesman, who belongs to the city of Paris
+
+- Write a SQL statement to display all the information for those salesmen with a commision up to 0.11
+
+- Write a SQL query to display the salesman ID followed by its location for each salesman which have a commission above 0.11
+
+
+* Usage of SQL from Java
+
+
+JDBC
+https://docs.oracle.com/javase/tutorial/jdbc/overview/index.html
+
+
+Exception in thread "main" java.sql.SQLException: No suitable driver found for jdbc:hsqldb:file:~/Sources/res/hello1
+
+Add the JDBS driver
+
+
+Query examples
+
+
+Parametered query
+
+* CRUD
+
+Excercises on Delete, UPDATE, INSERT
+
+In Java: Execute update and close
+
+Execute twice Insert 1
+
+* CRUD
+
+* NULL VALUES
+
+* Group BY
+
+
