@@ -4,22 +4,17 @@ import static spark.Spark.*;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
 
 import javax.servlet.MultipartConfigElement;
+import javax.servlet.http.HttpServletRequest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonStreamParser;
 
 import spark.Filter;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-import spark.utils.IOUtils;
 
 /**
  * Hello world!
@@ -31,12 +26,68 @@ public class App
     {
     	staticFiles.location("/static"); // Static files
 
+    	get("/login/:login_name", "application/json", new Route(){
+			public Object handle(Request req, Response res) throws Exception {
+    			req.session(true);                      // create and return session
+    			
+    			if (!req.headers("pwd").equals("123456"))
+    				halt(401, "Not authorized");
+    			
+    			User roberto = new User("rob", "Roberto", "Guanciale", 42, 10);
+    			
+				return roberto;
+			}
+    	}, new JsonTransformer());
+
+    	post("/report/:login_name", new Route() {
+    		public Object handle(Request req, Response res) throws Exception {
+    			req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+
+    			if (!req.headers("pwd").equals("123456"))
+    				halt(401, "Not authorized");
+
+    			HttpServletRequest raw = req.raw();
+    			//InputStream is = raw.getPart("uploaded_file").getInputStream();
+    			InputStream is = raw.getInputStream();
+    			
+    			Gson gb = new GsonBuilder().create();
+    			MatchResult input = gb.fromJson(new InputStreamReader(is), MatchResult.class);
+    			System.out.println(input.duration);
+    			User roberto = new User("rob", "Roberto", "Guanciale", 55, 10);
+    			return roberto; 
+    		}
+    	}, new JsonTransformer());
+ 	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
     	get("/hello", new Route(){
 			public Object handle(Request req, Response res) throws Exception {
     			req.session(true);                      // create and return session
-				return "Hello world " + req.session().attribute("user");
+				return "Hello world your name is " + req.session().attribute("user");
 			}
     	});
+    	
     	// matches "GET /hello/foo" and "GET /hello/bar"
     	// request.params(":name") is 'foo' or 'bar'
     	get("/test/:name", new Route() {
