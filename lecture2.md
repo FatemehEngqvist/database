@@ -1,3 +1,6 @@
+# ORDERING
+
+
 # GROUPING
 The `GROUP BY` clause is used with the SELECT statement to make a group of rows based on the values of a specific column or expression. The SQL AGGREGATE function can be used to get summary information for every group and these are applied to an individual group.
 The WHERE clause is used to retrieve rows based on a certain condition, but it can not be applied to grouped result.
