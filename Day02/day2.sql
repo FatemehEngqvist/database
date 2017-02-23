@@ -43,9 +43,9 @@ CREATE TABLE PUBLIC.COURSES (
 	CONSTRAINT COURSES_TEACHERS_FK FOREIGN KEY (TEACHER) REFERENCES PUBLIC.TEACHERS(PERSONNUMBER)
 );
 
-INSERT INTO TEACHERS VALUES (1001, 'Roberto', 30000);
-INSERT INTO TEACHERS VALUES (1002, 'Erik', 29000);
-INSERT INTO TEACHERS VALUES (1003, 'Jhon', 31000);
+INSERT INTO TEACHERS VALUES (1001, 'Roberto', 'Guanciale', 'Italian', '1979-12-08', 30000);
+INSERT INTO TEACHERS VALUES (1002, 'Erik', 'Anderson', 'Swedish', '1979-12-08', 29000);
+INSERT INTO TEACHERS VALUES (1003, 'Jhon', 'Gates', 'USA', '1960-11-08', 31000);
 
 INSERT INTO COURSES VALUES (20,'Java 1', 1001);
 INSERT INTO COURSES VALUES (21,'Java 1', 1001);
@@ -73,7 +73,7 @@ SELECT s1.PERSONNUMBER, name, count(*) FROM STUDENTS AS S1 LEFT JOIN STUDENTS AS
 
 
 CREATE TABLE STUDENTS_COURSES (
-	studentcode VARCHAR(100),
+	studentcode INTEGER,
 	coursecode INTEGER
 );
 
@@ -104,17 +104,27 @@ FROM STUDENTS as S
 JOIN STUDENTS_COURSES as SC ON S.personnumber = SC.studentcode
 GROUP BY S.name, S.surname;
 
+SELECT  S.name, S.surname, case when SC.coursecode is null then 0 else 1 end
+FROM STUDENTS as S
+LEFT JOIN STUDENTS_COURSES as SC ON S.personnumber = SC.studentcode
+
+SELECT  S.name, S.surname, SUM(case when SC.coursecode is null then 0 else 1 end)
+FROM STUDENTS as S
+LEFT JOIN STUDENTS_COURSES as SC ON S.personnumber = SC.studentcode
+GROUP BY S.name, S.surname;
+
+
 SELECT  C.name, count(*)
 FROM COURSES as C
 JOIN STUDENTS_COURSES as SC ON C.code = SC.coursecode
 GROUP BY C.name;
 
-SELECT  C.name, SUM(isnull(SC.studentcode, 0))
+SELECT  C.name, SUM(case when SC.studentcode is null then 0 else 1 end)
 FROM COURSES as C
 JOIN STUDENTS_COURSES as SC ON C.code = SC.coursecode
 GROUP BY C.name;
 
-
+-- List students and their examiners
 SELECT S.name, S.surname, T.name, T.NAME
 FROM STUDENTS as S
 LEFT JOIN STUDENTS_COURSES as SC ON S.personnumber = SC.studentcode

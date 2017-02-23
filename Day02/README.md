@@ -1,5 +1,20 @@
 # ORDERING
+The `ODFER BY` clause is used with the SELECT statement to sort rows
+based on the values of a specific column or expression.
 
+```SQL
+SELECT name, NATIONALITY
+FROM students
+WHERE HEIGHT >= 175
+ORDER BY NATIONALITY DESC, WEIGHT DESC;
+
+SELECT * FROM AGENTS;
+SELECT AGENT_NAME, WORKING_AREA FROM AGENTS WHERE WORKING_AREA='London';
+
+SELECT * FROM agents WHERE commission <= 0.11;
+
+SELECT agent_code,WORKING_AREA FROM agents WHERE commission > 0.11;
+```
 
 # GROUPING
 The `GROUP BY` clause is used with the SELECT statement to make a group of rows based on the values of a specific column or expression. The SQL AGGREGATE function can be used to get summary information for every group and these are applied to an individual group.
@@ -71,7 +86,8 @@ INSERT INTO COURSES VALUES (27,'Python');
 
 ## Relation "who teaches what"
 Let assume that for every course there is only one responsible teacher and that the one
-teacher can supervise serveral courses. How we can represent this relation?
+teacher can supervise serveral courses. How can we represent this relation?
+
 The simplest approach is to add an addtional attribute (`TEACHER`) to the table `COURSES`.
 This attribute represent the personnumber (i.e. primary key) of the teacher responsible for the course.
 
@@ -108,20 +124,20 @@ To inform the DBMS about the relation we must create a foreing key.
 
 ![new-connection](../images/cut-5-extkey-1.png)
 
-The relational diagram is shown by clicking **Diagram**
+The relational diagram is shown in the TAB **Diagram**
 
 ![new-connection](../images/cut-5-extkey-2.png)
 
 
 ## Querying multiple tables
-SQL query can access multiple tables. The simple mechanisms consists of table product,
+A SQL query can access multiple tables. The simple mechanisms consists of table product,
 which associate every element of the first table to every element of the second one.
 Let `A` and `B` be two tables containing the records `a1,a2,a3` and `b1, b2, b3` respectively.
-The query 
+The following query returns the cartesian product of the two tables
 ```SQL
 SELECT * FROM A, B
 ```
-returns the cartesian product of the two tables
+
 
 A    | B
 -----|------
@@ -141,7 +157,7 @@ SELECT * FROM COURSES, TEACHERS;
 SELECT * FROM COURSES, TEACHERS, STUDENTS;
 ```
 
-To extract the courses with the corresponding respinsible teacher, we can filter out
+To extract the courses with the corresponding responsible teacher, we can filter out
 the cartesian product, using the foreign key:
 ```SQL
 SELECT * FROM COURSES, TEACHERS WHERE courses.TEACHER = teachers.PERSONNUMBER;
@@ -152,41 +168,41 @@ Alternatively, we can use the `JOIN` operator:
 SELECT * FROM COURSES JOIN TEACHERS ON courses.TEACHER = teachers.PERSONNUMBER;
 ```
 
-Hereafter an example that mixes both `JOIN` and `WHERE`. It returs
+The following example mixes both `JOIN` and `WHERE`. The query returns
 all courses whose name start in J and the corresponding supervisor 
 ```SQL
 SELECT * FROM COURSES JOIN TEACHERS ON courses.TEACHER = teachers.PERSONNUMBER WHERE courses.NAME LIKE 'J%';
 ```
 
-Join and cartesian products can operate on the same relation. The following (equivalent) queries 
-return for every students all students that are shorter 
+Join and cartesian products can operate on the same relation. The following (equivalent) queryes 
+return for every students all students that are taller 
 ```SQL
 SELECT *
 FROM STUDENTS AS S1,
      STUDENTS AS S2
-WHERE S1.height < S2.HEIGHT;
+WHERE S1.height > S2.HEIGHT;
 
 SELECT *
 FROM STUDENTS AS S1
-JOIN STUDENTS AS S2 ON S1.height < S2.HEIGHT;
+JOIN STUDENTS AS S2 ON S1.height > S2.HEIGHT;
 ```
 
 The result of join and cartesian product is a table that we can group. The following
-queryes return for every student the number of shorter students
+queryes return for every student the number of taller students
 ```SQL
 SELECT PERSONNUMBER, count(*)
 FROM STUDENTS AS S1
-JOIN STUDENTS AS S2 ON S1.height < S2.HEIGHT
+JOIN STUDENTS AS S2 ON S1.height > S2.HEIGHT
 GROUP BY PERSONNUMBER;
 
 SELECT s1.PERSONNUMBER, name, count(*)
 FROM STUDENTS AS S1
-JOIN STUDENTS AS S2 ON S1.height < S2.HEIGHT
+JOIN STUDENTS AS S2 ON S1.height > S2.HEIGHT
 GROUP BY s1.PERSONNUMBER, s1.NAME;
 ```
 
 ## Left join
-The following query returns all teacher and the exams they supervise
+The following query returns all teachers and the exams they supervise
 ```SQL
 SELECT *
 FROM TEACHERS 
@@ -207,7 +223,7 @@ SELECT *
 FROM TEACHERS 
 LEFT JOIN COURSES ON courses.TEACHER = teachers.PERSONNUMBER;
 ```
-Notice that the order count, the following query yield a different result
+**Notice that the order is important: the following query yield a different result**
 ```SQL
 SELECT *
 FROM COURSES
@@ -215,15 +231,15 @@ LEFT JOIN TEACHERS ON courses.TEACHER = teachers.PERSONNUMBER;
 ```
 
 ## Many-to-many relationship
-How model the relationship "Who takes what?". Every student can take more than one course, so we can
+How can we model the relationship "Who takes what?". Every student can take more than one course, so we can
 not just add an attribute with the course code to the table `STUDENTS`. Similarly,
-the same course can be taken by more than a student, so we can not simply
-add an attribute with the student's personnumber tothe table `COURSES`.
+the same course can be taken by more than one student, so we can not simply
+add an attribute with the student's personnumber to the table `COURSES`.
 The standard solution is to add a new table, used explicitely to model this `n-to-n` relationship.
 
 ```SQL
 CREATE TABLE STUDENTS_COURSES (
-	studentcode VARCHAR(100),,
+	studentcode INTEGER,
 	coursecode INTEGER
 );
 ```
@@ -254,7 +270,7 @@ INSERT INTO STUDENTS_COURSES VALUES (1003, 23);
 ```
 
 
-In the following we report some queries on the database
+In the following we experiment some queries on the database
 
 ### List students and the exams they take
 ```SQL
@@ -289,20 +305,22 @@ GROUP BY S.name, S.surname;
 ```
 
 ### List courses and the number of students
-To be fixed
 ```SQL
-SELECT  C.name, count(*)
-FROM COURSES as C
-JOIN STUDENTS_COURSES as SC ON C.code = SC.coursecode
-GROUP BY C.name;
+SELECT  S.name, S.surname, case when SC.coursecode is null then 0 else 1 end
+FROM STUDENTS as S
+LEFT JOIN STUDENTS_COURSES as SC ON S.personnumber = SC.studentcode
+
+SELECT  S.name, S.surname, SUM(case when SC.coursecode is null then 0 else 1 end)
+FROM STUDENTS as S
+LEFT JOIN STUDENTS_COURSES as SC ON S.personnumber = SC.studentcode
+GROUP BY S.name, S.surname;
 ```
 
 ### List courses and the number of students (including courses with no student)
-To be fixed
 ```SQL
-SELECT  C.name, SUM(isnull(SC.coursecode, 0))
+SELECT  C.name, SUM(case when SC.studentcode is null then 0 else 1 end)
 FROM COURSES as C
-LEFT JOIN STUDENTS_COURSES as SC ON C.code = SC.coursecode
+JOIN STUDENTS_COURSES as SC ON C.code = SC.coursecode
 GROUP BY C.name;
 ```
 
@@ -316,7 +334,7 @@ LEFT JOIN TEACHERS as T ON C.teacher = T.personnumber
 ;
 ```
 
-# Last note on JDBC
+# Advanced notes on JDBC
 Additionally to provide common mechanism to access and manage data,
 DBMS provides a transactional abstraction to the database.
 
@@ -327,16 +345,15 @@ transaction generally represents any change in database. Transactions in a datab
 * To provide isolation between programs accessing a database concurrently. If this isolation is not provided, the programs' outcomes are possibly erroneous.
 
 A database transaction, by definition, must be atomic, consistent, isolated and durable (ACID).
-Practically, the common pattern is
 A simple transaction is usually issued to the database system in a language like SQL wrapped in a transaction, using a pattern similar to the following:
 
 1. Begin the transaction
 2. Execute a set of data manipulations and/or queries
-3. If no errors occur then commit the transaction and end it
+3. If no error occurs then commit the transaction and end it
 4. If errors occur then rollback the transaction and end it
 
-If no errors occurred during the execution of the transaction then the system commits the transaction.
-A transaction commit operation applies all data manipulations within the scope of the transaction and persists the results to the database. If an error occurs during the transaction, or if the user specifies a rollback operation, the data manipulations within the transaction are not persisted to the database. In no case can a partial transaction be committed to the database since that would leave the database in an inconsistent state.
+A transaction commit applies all data manipulations within the scope of the transaction and persists the results to the database.
+If an error occurs during the transaction, or if the user specifies a rollback operation, the data manipulations within the transaction are not persisted to the database. In no case can a partial transaction be committed to the database since that would leave the database in an inconsistent state.
 
 ```JAVA
 con.setAutoCommit(false);
