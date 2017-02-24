@@ -374,4 +374,4 @@ con.close();
 # Concurrency
 
 # SQL injection
-
+![new-connectioninjection](images/exploits_of_a_mom.png)
