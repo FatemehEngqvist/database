@@ -129,33 +129,33 @@ Personnumber | Name | Surname | Birthday | Nationality
 # Creating a database
 Start dbeaver, and click on database/new-connection
 
-![new-connection](../images/cut-1-connection-1.png)
+![new-connection](./images/cut-1-connection-1.png)
 
 Select HSQLDB/Embedded
 
-![new-connection](../images/cut-1-connection-2.png)
+![new-connection](./images/cut-1-connection-2.png)
 
 
 Choose where you want to save the new database on you disk
 (by using the **browse** button) and click **next**
 
-![new-connection](../images/cut-1-connection-3.png)
+![new-connection](./images/cut-1-connection-3.png)
 
 We create our first database. We can not add the **student** table.
 Open the database, and right click public/Tables and select "Create New Table".
 
-![new-connection](../images/cut-2-create-1.png)
+![new-connection](./images/cut-2-create-1.png)
 
 Change the table name to **students**, then right click in the lower white box
 ans select create column to add the first attribute 
 
-![new-connection](../images/cut-2-create-2.png)
+![new-connection](./images/cut-2-create-2.png)
 
 Change the column name to **PERSONNUMBER**. And repeat to add all other attributes
 of students.
 **Before saving your table, change the type of PERSONNUMBER to integer**
 
-![new-connection](../images/cut-2-create-3.png)
+![new-connection](./images/cut-2-create-3.png)
 
 Save your work with Ctrl^s. This will generate the command to add the table to the database.
 The statement has the following shape:
@@ -172,7 +172,7 @@ For now we know only two types ```varchar(x)```, that represents strings contain
 If you click on the TAB data you can inspect the content of the table (it is currently empty). You can
 add an entity by clicking the + button. The entity is saved in the database after that you type Ctrl^s.
 
-![new-connection](../images/cut-3-insert-2.png)
+![new-connection](./images/cut-3-insert-2.png)
  
 We can finally inform the DBMS that the **personnumber** is a **key** of the table student. After that
 * the DBMS will force every entity to have a personnumber
@@ -182,9 +182,9 @@ We can finally inform the DBMS that the **personnumber** is a **key** of the tab
 Click on the *Unique Keys* tab, right click on the white box and select *Create new Unique Key*.
 Then select the proper column as unique key.
 
-![new-connection](../images/cut-4-key-1.png)
+![new-connection](./images/cut-4-key-1.png)
 
-![new-connection](../images/cut-4-key-2.png)
+![new-connection](./images/cut-4-key-2.png)
 
 Save the changes to the schema by using Crtl^s
 
