@@ -250,7 +250,7 @@ ALTER TABLE PUBLIC.STUDENTS_COURSES ADD CONSTRAINT STUDENTS_COURSES_STUDENTS_FK 
 ALTER TABLE PUBLIC.STUDENTS_COURSES ADD CONSTRAINT STUDENTS_COURSES_COURSES_FK FOREIGN KEY (COURSECODE) REFERENCES PUBLIC.COURSES(CODE);
 ```
 
-![new-connection](../images/cut-6-nton-1.png)
+![new-connection](./images/cut-6-nton-1.png)
 
 Finally, the attribute pair `studentcode,coursecode` is the primary key of the table:
 the same student can not take the same course twice.
@@ -258,7 +258,7 @@ the same student can not take the same course twice.
 ALTER TABLE PUBLIC.STUDENTS_COURSES ADD CONSTRAINT STUDENTS_COURSES_PK PRIMARY KEY (STUDENTCODE,COURSECODE);
 ```
 
-![new-connection](../images/cut-6-nton-2.png)
+![new-connection](./images/cut-6-nton-2.png)
 
 Add some entries to the relation
 ```SQL
