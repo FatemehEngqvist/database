@@ -122,11 +122,11 @@ To inform the DBMS about the relation we must create a foreing key.
 4. Select the attribute **teacher** as column
 5. Press **ok**.
 
-![new-connection](../images/cut-5-extkey-1.png)
+![new-connection](./images/cut-5-extkey-1.png)
 
 The relational diagram is shown in the TAB **Diagram**
 
-![new-connection](../images/cut-5-extkey-2.png)
+![new-connection](./images/cut-5-extkey-2.png)
 
 
 ## Querying multiple tables
