@@ -147,7 +147,7 @@ Open the database, and right click public/Tables and select "Create New Table".
 ![new-connection](./images/cut-2-create-1.png)
 
 Change the table name to **students**, then right click in the lower white box
-ans select create column to add the first attribute 
+and select create column to add the first attribute 
 
 ![new-connection](./images/cut-2-create-2.png)
 
